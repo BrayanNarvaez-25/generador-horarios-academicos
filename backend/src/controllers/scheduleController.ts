@@ -1,5 +1,10 @@
 import type { Request, Response } from "express";
 import { validateScheduleConfiguration } from "../services/scheduleConfigService.js";
+import { getAllCourses } from "../services/courseService.js";
+import {
+  calculateCombinationCount,
+  generateCombinations,
+} from "../services/combinatoricsService.js";
 import type { ScheduleConfiguration } from "../types/schedule.js";
 
 export async function handleGenerateSchedule(req: Request, res: Response) {
@@ -36,13 +41,30 @@ export async function handleGenerateSchedule(req: Request, res: Response) {
       });
     }
 
-    // A partir del siguiente paso (combinatoria), aquí generaremos
-    // las combinaciones reales. Por ahora confirmamos que la
-    // configuración es válida y lista para procesar.
+    const allCourses = await getAllCourses();
+
+    const totalCombinations = calculateCombinationCount(
+      allCourses.length,
+      configuration.numberOfCourses
+    );
+
+    const possibleSchedules = generateCombinations(
+      allCourses,
+      configuration.numberOfCourses
+    );
+
+    // Nota: en el siguiente paso vamos a evaluar cada combinación
+    // (conjuntos, reglas lógicas, cruces, etc.). Por ahora solo
+    // confirmamos que la generación matemática coincide con la fórmula.
     return res.status(200).json({
-      message: "Configuración válida. Lista para generar combinaciones.",
-      totalCoursesAvailable: validation.totalCoursesAvailable,
-      configuration,
+      message: "Combinaciones generadas correctamente.",
+      totalCoursesAvailable: allCourses.length,
+      coursesPerSchedule: configuration.numberOfCourses,
+      totalCombinations,
+      generatedCombinationsCount: possibleSchedules.length,
+      schedulesPreview: possibleSchedules
+        .slice(0, 3)
+        .map((schedule) => schedule.map((course) => course.name)),
     });
   } catch (error) {
     return res.status(500).json({
