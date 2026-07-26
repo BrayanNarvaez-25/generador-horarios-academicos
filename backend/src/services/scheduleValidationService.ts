@@ -47,3 +47,25 @@ export function meetsModalityRule(
 
   return hasVirtualCourse(schedule);
 }
+
+export function countDifficultCourses(schedule: Course[]): number {
+  return schedule.filter((course) => course.difficulty === "Alta").length;
+}
+
+export function meetsDifficultyRule(
+  schedule: Course[],
+  maximumDifficultCourses: number
+): boolean {
+  return countDifficultCourses(schedule) <= maximumDifficultCourses;
+}
+
+export function calculateTotalCredits(schedule: Course[]): number {
+  return schedule.reduce((total, course) => total + course.credits, 0);
+}
+
+export function meetsCreditLimit(
+  schedule: Course[],
+  maximumCredits: number
+): boolean {
+  return calculateTotalCredits(schedule) <= maximumCredits;
+}

@@ -7,7 +7,14 @@ import {
 } from "../services/combinatoricsService.js";
 import type { ScheduleConfiguration } from "../types/schedule.js";
 import { getCourseNameSet, includesRequiredCourses } from "../services/setService.js";
-import { hasScheduleConflicts, meetsModalityRule } from "../services/scheduleValidationService.js";
+import {
+  hasScheduleConflicts,
+  meetsModalityRule,
+  countDifficultCourses,
+  meetsDifficultyRule,
+  calculateTotalCredits,
+  meetsCreditLimit,
+} from "../services/scheduleValidationService.js";
 
 export async function handleGenerateSchedule(req: Request, res: Response) {
   try {
@@ -178,6 +185,59 @@ export async function handleModalityDemo(req: Request, res: Response) {
         modality: course.modality,
       })),
       "¿Cumple la regla de modalidad?": meetsRule,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error al generar la demostración.",
+      error: error instanceof Error ? error.message : "Error desconocido",
+    });
+  }
+}
+
+export async function handleDifficultyAndCreditsDemo(
+  req: Request,
+  res: Response
+) {
+  try {
+    const allCourses = await getAllCourses();
+
+    if (allCourses.length === 0) {
+      return res.status(400).json({
+        message: "No hay materias registradas para hacer la demostración.",
+      });
+    }
+
+    const maximumDifficultCourses = Number(
+      req.query["maxDifficult"] ?? "2"
+    );
+    const maximumCredits = Number(req.query["maxCredits"] ?? "12");
+
+    const difficultCount = countDifficultCourses(allCourses);
+    const totalCredits = calculateTotalCredits(allCourses);
+
+    return res.status(200).json({
+      message: "Demostración de validación de dificultad y créditos.",
+      courses: allCourses.map((course) => ({
+        name: course.name,
+        difficulty: course.difficulty,
+        credits: course.credits,
+      })),
+      dificultad: {
+        maximoPermitido: maximumDifficultCourses,
+        cantidadEnHorario: difficultCount,
+        "¿Cumple la regla de dificultad?": meetsDifficultyRule(
+          allCourses,
+          maximumDifficultCourses
+        ),
+      },
+      creditos: {
+        maximoPermitido: maximumCredits,
+        totalEnHorario: totalCredits,
+        "¿Cumple el límite de créditos?": meetsCreditLimit(
+          allCourses,
+          maximumCredits
+        ),
+      },
     });
   } catch (error) {
     return res.status(500).json({
