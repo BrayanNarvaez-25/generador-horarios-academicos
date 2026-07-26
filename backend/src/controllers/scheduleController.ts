@@ -7,7 +7,7 @@ import {
 } from "../services/combinatoricsService.js";
 import type { ScheduleConfiguration } from "../types/schedule.js";
 import { getCourseNameSet, includesRequiredCourses } from "../services/setService.js";
-import { hasScheduleConflicts } from "../services/scheduleValidationService.js";
+import { hasScheduleConflicts, meetsModalityRule } from "../services/scheduleValidationService.js";
 
 export async function handleGenerateSchedule(req: Request, res: Response) {
   try {
@@ -137,6 +137,47 @@ export async function handleConflictsDemo(req: Request, res: Response) {
       })),
       "¿El conjunto de materias tiene cruces?": hasConflicts,
       "¿El horario NO tiene cruces (¬P)?": !hasConflicts,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error al generar la demostración.",
+      error: error instanceof Error ? error.message : "Error desconocido",
+    });
+  }
+}
+
+export async function handleModalityDemo(req: Request, res: Response) {
+  try {
+    const allCourses = await getAllCourses();
+
+    if (allCourses.length === 0) {
+      return res.status(400).json({
+        message: "No hay materias registradas para hacer la demostración.",
+      });
+    }
+
+    const requiredModality = (req.query["modality"] as string) || "Cualquiera";
+
+    if (!["Cualquiera", "Presencial", "Virtual"].includes(requiredModality)) {
+      return res.status(400).json({
+        message:
+          "El parámetro 'modality' debe ser: Cualquiera, Presencial o Virtual.",
+      });
+    }
+
+    const meetsRule = meetsModalityRule(
+      allCourses,
+      requiredModality as "Cualquiera" | "Presencial" | "Virtual"
+    );
+
+    return res.status(200).json({
+      message: "Demostración de validación de modalidad.",
+      requiredModality,
+      courses: allCourses.map((course) => ({
+        name: course.name,
+        modality: course.modality,
+      })),
+      "¿Cumple la regla de modalidad?": meetsRule,
     });
   } catch (error) {
     return res.status(500).json({

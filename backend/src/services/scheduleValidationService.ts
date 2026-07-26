@@ -24,3 +24,26 @@ export function hasScheduleConflicts(courses: Course[]): boolean {
 
   return false;
 }
+
+export function hasOnSiteCourse(schedule: Course[]): boolean {
+  return schedule.some((course) => course.modality === "Presencial");
+}
+
+export function hasVirtualCourse(schedule: Course[]): boolean {
+  return schedule.some((course) => course.modality === "Virtual");
+}
+
+export function meetsModalityRule(
+  schedule: Course[],
+  requiredModality: "Cualquiera" | "Presencial" | "Virtual"
+): boolean {
+  if (requiredModality === "Cualquiera") {
+    return true;
+  }
+
+  if (requiredModality === "Presencial") {
+    return hasOnSiteCourse(schedule);
+  }
+
+  return hasVirtualCourse(schedule);
+}
