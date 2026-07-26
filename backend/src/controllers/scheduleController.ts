@@ -5,7 +5,7 @@ import {
   calculateCombinationCount,
   generateCombinations,
 } from "../services/combinatoricsService.js";
-import type { ScheduleConfiguration } from "../types/schedule.js";
+import { evaluateSchedule } from "../services/scheduleEvaluationService.js";
 import { getCourseNameSet, includesRequiredCourses } from "../services/setService.js";
 import {
   hasScheduleConflicts,
@@ -14,8 +14,9 @@ import {
   meetsDifficultyRule,
   calculateTotalCredits,
   meetsCreditLimit,
+  meetsPrerequisites,
 } from "../services/scheduleValidationService.js";
-import { meetsPrerequisites } from "../services/scheduleValidationService.js";
+import type { ScheduleConfiguration } from "../types/schedule.js";
 
 export async function handleGenerateSchedule(req: Request, res: Response) {
   try {
@@ -42,6 +43,10 @@ export async function handleGenerateSchedule(req: Request, res: Response) {
       });
     }
 
+    if (!configuration.completedCourses) {
+      configuration.completedCourses = [];
+    }
+
     const validation = await validateScheduleConfiguration(configuration);
 
     if (!validation.valid) {
@@ -63,18 +68,28 @@ export async function handleGenerateSchedule(req: Request, res: Response) {
       configuration.numberOfCourses
     );
 
-    // Nota: en el siguiente paso vamos a evaluar cada combinación
-    // (conjuntos, reglas lógicas, cruces, etc.). Por ahora solo
-    // confirmamos que la generación matemática coincide con la fórmula.
+    const evaluatedSchedules = possibleSchedules.map((schedule) => ({
+      courses: schedule.map((course) => course.name),
+      totalCredits: calculateTotalCredits(schedule),
+      evaluation: evaluateSchedule(schedule, configuration),
+    }));
+
+    const validSchedules = evaluatedSchedules.filter(
+      (item) => item.evaluation.valid
+    );
+
+    const discardedSchedules = evaluatedSchedules.filter(
+      (item) => !item.evaluation.valid
+    );
+
     return res.status(200).json({
-      message: "Combinaciones generadas correctamente.",
-      totalCoursesAvailable: allCourses.length,
-      coursesPerSchedule: configuration.numberOfCourses,
+      totalCourses: allCourses.length,
+      selectedAmount: configuration.numberOfCourses,
       totalCombinations,
-      generatedCombinationsCount: possibleSchedules.length,
-      schedulesPreview: possibleSchedules
-        .slice(0, 3)
-        .map((schedule) => schedule.map((course) => course.name)),
+      validSchedulesCount: validSchedules.length,
+      discardedSchedulesCount: discardedSchedules.length,
+      validSchedules,
+      discardedSchedules,
     });
   } catch (error) {
     return res.status(500).json({
@@ -94,7 +109,6 @@ export async function handleSetConceptsDemo(req: Request, res: Response) {
       });
     }
 
-    // Tomamos las primeras 2 materias como ejemplo de "horario".
     const sampleSchedule = allCourses.slice(0, 2);
     const courseSet = getCourseNameSet(sampleSchedule);
 
@@ -132,7 +146,6 @@ export async function handleConflictsDemo(req: Request, res: Response) {
       });
     }
 
-    // Tomamos todas las materias disponibles como ejemplo de horario completo.
     const hasConflicts = hasScheduleConflicts(allCourses);
 
     return res.status(200).json({
@@ -208,9 +221,7 @@ export async function handleDifficultyAndCreditsDemo(
       });
     }
 
-    const maximumDifficultCourses = Number(
-      req.query["maxDifficult"] ?? "2"
-    );
+    const maximumDifficultCourses = Number(req.query["maxDifficult"] ?? "2");
     const maximumCredits = Number(req.query["maxCredits"] ?? "12");
 
     const difficultCount = countDifficultCourses(allCourses);
