@@ -1,5 +1,6 @@
 import express from "express";
 import { courseRoutes } from "./routes/courseRoutes.js";
+import { scheduleRoutes } from "./routes/scheduleRoutes.js";
 
 const app = express();
 const PORT = 3000;
@@ -11,6 +12,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/courses", courseRoutes);
+app.use("/schedules", scheduleRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
