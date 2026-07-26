@@ -7,6 +7,7 @@ import {
 } from "../services/combinatoricsService.js";
 import type { ScheduleConfiguration } from "../types/schedule.js";
 import { getCourseNameSet, includesRequiredCourses } from "../services/setService.js";
+import { hasScheduleConflicts } from "../services/scheduleValidationService.js";
 
 export async function handleGenerateSchedule(req: Request, res: Response) {
   try {
@@ -104,6 +105,38 @@ export async function handleSetConceptsDemo(req: Request, res: Response) {
         materiasObligatorias: [...requiredCourses],
         "¿El horario incluye todas las materias obligatorias?": hasRequired,
       },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error al generar la demostración.",
+      error: error instanceof Error ? error.message : "Error desconocido",
+    });
+  }
+}
+
+export async function handleConflictsDemo(req: Request, res: Response) {
+  try {
+    const allCourses = await getAllCourses();
+
+    if (allCourses.length < 2) {
+      return res.status(400).json({
+        message: "Se necesitan al menos 2 materias para probar cruces.",
+      });
+    }
+
+    // Tomamos todas las materias disponibles como ejemplo de horario completo.
+    const hasConflicts = hasScheduleConflicts(allCourses);
+
+    return res.status(200).json({
+      message: "Demostración de detección de cruces de horario.",
+      courses: allCourses.map((course) => ({
+        name: course.name,
+        day: course.day,
+        startTime: course.startTime,
+        endTime: course.endTime,
+      })),
+      "¿El conjunto de materias tiene cruces?": hasConflicts,
+      "¿El horario NO tiene cruces (¬P)?": !hasConflicts,
     });
   } catch (error) {
     return res.status(500).json({
