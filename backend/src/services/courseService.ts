@@ -1,4 +1,5 @@
 import { prisma } from "../config/prisma.js";
+import type { CourseWithPrerequisites } from "../types/course.js";
 
 interface CourseInput {
   name: string;
@@ -14,7 +15,7 @@ export async function createCourse(data: CourseInput) {
   return prisma.course.create({ data });
 }
 
-export async function getAllCourses() {
+export async function getAllCourses(): Promise<CourseWithPrerequisites[]> {
   return prisma.course.findMany({
     include: {
       requiredPrerequisites: {

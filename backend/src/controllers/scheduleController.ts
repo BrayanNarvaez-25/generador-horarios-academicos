@@ -15,6 +15,7 @@ import {
   calculateTotalCredits,
   meetsCreditLimit,
 } from "../services/scheduleValidationService.js";
+import { meetsPrerequisites } from "../services/scheduleValidationService.js";
 
 export async function handleGenerateSchedule(req: Request, res: Response) {
   try {
@@ -238,6 +239,42 @@ export async function handleDifficultyAndCreditsDemo(
           maximumCredits
         ),
       },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error al generar la demostración.",
+      error: error instanceof Error ? error.message : "Error desconocido",
+    });
+  }
+}
+
+export async function handlePrerequisitesDemo(req: Request, res: Response) {
+  try {
+    const allCourses = await getAllCourses();
+
+    if (allCourses.length === 0) {
+      return res.status(400).json({
+        message: "No hay materias registradas para hacer la demostración.",
+      });
+    }
+
+    const completedCoursesParam = req.query["completed"] as string | undefined;
+    const completedCourseNames = completedCoursesParam
+      ? completedCoursesParam.split(",")
+      : [];
+
+    const meetsRule = meetsPrerequisites(allCourses, completedCourseNames);
+
+    return res.status(200).json({
+      message: "Demostración de validación de prerrequisitos.",
+      completedCourseNames,
+      courses: allCourses.map((course) => ({
+        name: course.name,
+        prerequisites: course.requiredPrerequisites.map(
+          (prerequisite) => prerequisite.prerequisiteCourse.name
+        ),
+      })),
+      "¿Se cumplen todos los prerrequisitos?": meetsRule,
     });
   } catch (error) {
     return res.status(500).json({

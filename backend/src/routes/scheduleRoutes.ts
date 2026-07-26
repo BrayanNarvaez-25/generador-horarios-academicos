@@ -5,6 +5,7 @@ import {
   handleConflictsDemo,
   handleModalityDemo,
   handleDifficultyAndCreditsDemo,
+  handlePrerequisitesDemo,
 } from "../controllers/scheduleController.js";
 
 export const scheduleRoutes = Router();
@@ -14,3 +15,4 @@ scheduleRoutes.get("/set-concepts-demo", handleSetConceptsDemo);
 scheduleRoutes.get("/conflicts-demo", handleConflictsDemo);
 scheduleRoutes.get("/modality-demo", handleModalityDemo);
 scheduleRoutes.get("/difficulty-credits-demo", handleDifficultyAndCreditsDemo);
+scheduleRoutes.get("/prerequisites-demo", handlePrerequisitesDemo);

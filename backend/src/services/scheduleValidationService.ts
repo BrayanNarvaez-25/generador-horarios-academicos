@@ -1,4 +1,5 @@
 import type { Course } from "../generated/prisma/client.js";
+import type { CourseWithPrerequisites } from "../types/course.js";
 
 export function haveTimeConflict(courseA: Course, courseB: Course): boolean {
   if (courseA.day !== courseB.day) {
@@ -68,4 +69,20 @@ export function meetsCreditLimit(
   maximumCredits: number
 ): boolean {
   return calculateTotalCredits(schedule) <= maximumCredits;
+}
+
+export function meetsPrerequisites(
+  schedule: CourseWithPrerequisites[],
+  completedCourseNames: string[]
+): boolean {
+  const availableCourseNames = new Set([
+    ...schedule.map((course) => course.name),
+    ...completedCourseNames,
+  ]);
+
+  return schedule.every((course) =>
+    course.requiredPrerequisites.every((prerequisite) =>
+      availableCourseNames.has(prerequisite.prerequisiteCourse.name)
+    )
+  );
 }
