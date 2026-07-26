@@ -6,6 +6,7 @@ import {
   generateCombinations,
 } from "../services/combinatoricsService.js";
 import type { ScheduleConfiguration } from "../types/schedule.js";
+import { getCourseNameSet, includesRequiredCourses } from "../services/setService.js";
 
 export async function handleGenerateSchedule(req: Request, res: Response) {
   try {
@@ -69,6 +70,44 @@ export async function handleGenerateSchedule(req: Request, res: Response) {
   } catch (error) {
     return res.status(500).json({
       message: "Error al procesar la configuración del horario.",
+      error: error instanceof Error ? error.message : "Error desconocido",
+    });
+  }
+}
+
+export async function handleSetConceptsDemo(req: Request, res: Response) {
+  try {
+    const allCourses = await getAllCourses();
+
+    if (allCourses.length === 0) {
+      return res.status(400).json({
+        message: "No hay materias registradas para hacer la demostración.",
+      });
+    }
+
+    // Tomamos las primeras 2 materias como ejemplo de "horario".
+    const sampleSchedule = allCourses.slice(0, 2);
+    const courseSet = getCourseNameSet(sampleSchedule);
+
+    const requiredCourses = new Set(["Programación"]);
+    const hasRequired = includesRequiredCourses(courseSet, requiredCourses);
+
+    return res.status(200).json({
+      message: "Demostración de conceptos de conjuntos.",
+      scheduleAsArray: [...courseSet],
+      cardinality: courseSet.size,
+      pertenencia: {
+        "¿Programación pertenece al horario?": courseSet.has("Programación"),
+        "¿Diseño pertenece al horario?": courseSet.has("Diseño"),
+      },
+      subconjunto: {
+        materiasObligatorias: [...requiredCourses],
+        "¿El horario incluye todas las materias obligatorias?": hasRequired,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error al generar la demostración.",
       error: error instanceof Error ? error.message : "Error desconocido",
     });
   }
