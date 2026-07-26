@@ -11,3 +11,33 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model Course {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(100)
+  day        String   @db.VarChar(20)
+  startTime  String   @map("start_time") @db.VarChar(5)
+  endTime    String   @map("end_time") @db.VarChar(5)
+  modality   String   @db.VarChar(20)
+  difficulty String   @db.VarChar(20)
+  credits    Int
+
+  // Relación: materias de las cuales ESTA es prerrequisito
+  isPrerequisiteFor Prerequisite[] @relation("PrerequisiteCourse")
+
+  // Relación: prerrequisitos que ESTA materia exige
+  requiredPrerequisites Prerequisite[] @relation("MainCourse")
+
+  @@map("courses")
+}
+
+model Prerequisite {
+  courseId             Int @map("course_id")
+  prerequisiteCourseId Int @map("prerequisite_course_id")
+
+  course             Course @relation("MainCourse", fields: [courseId], references: [id])
+  prerequisiteCourse Course @relation("PrerequisiteCourse", fields: [prerequisiteCourseId], references: [id])
+
+  @@id([courseId, prerequisiteCourseId])
+  @@map("prerequisites")
+}
