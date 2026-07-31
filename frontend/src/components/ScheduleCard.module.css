@@ -1,18 +1,19 @@
 .validCard,
 .discardedCard {
-  border-radius: 8px;
-  padding: 1rem;
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
   margin-bottom: 0.75rem;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow);
 }
 
 .validCard {
-  border-left: 4px solid #27ae60;
+  border-left: 4px solid var(--valid);
 }
 
 .discardedCard {
-  border-left: 4px solid #c0392b;
-  opacity: 0.85;
+  border-left: 4px solid var(--discarded);
 }
 
 .header {
@@ -21,32 +22,38 @@
   align-items: center;
   margin-bottom: 0.5rem;
   font-size: 0.85rem;
+  color: var(--text-muted);
 }
 
 .validBadge {
-  background: #27ae60;
-  color: white;
+  background: var(--valid-bg);
+  color: var(--valid);
   padding: 0.15rem 0.5rem;
   border-radius: 4px;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
 }
 
 .discardedBadge {
-  background: #c0392b;
-  color: white;
+  background: var(--discarded-bg);
+  color: var(--discarded);
   padding: 0.15rem 0.5rem;
   border-radius: 4px;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
 }
 
 .courseList {
   margin: 0.5rem 0;
   padding-left: 1.2rem;
+  color: var(--text);
 }
 
 .reasons {
   font-size: 0.8rem;
-  color: #c0392b;
+  color: var(--discarded);
   padding-left: 1.2rem;
   margin-bottom: 0.5rem;
 }

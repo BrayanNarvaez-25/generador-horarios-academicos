@@ -1,6 +1,7 @@
 import { useCourses } from "../hooks/useCourses";
 import type { EvaluatedSchedule } from "../types/schedule";
 import styles from "./ScheduleDetailPage.module.css";
+import { MathBadge } from "../components/MathBadge";
 
 interface ScheduleDetailPageProps {
   schedule: EvaluatedSchedule;
@@ -26,6 +27,7 @@ export function ScheduleDetailPage({
       </button>
 
       <h2>Detalle del horario</h2>
+      <MathBadge notation="H ⊆ U" label="Horario como subconjunto" />
 
       <div
         className={valid ? styles.validSummary : styles.discardedSummary}

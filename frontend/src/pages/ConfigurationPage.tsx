@@ -2,6 +2,7 @@ import { useCourses } from "../hooks/useCourses";
 import { ScheduleConfigForm } from "../components/ScheduleConfigForm";
 import { generateSchedule } from "../services/scheduleService";
 import type { ScheduleConfiguration, GenerateScheduleResponse } from "../types/schedule";
+import { MathBadge } from "../components/MathBadge";
 
 interface ConfigurationPageProps {
   onScheduleGenerated: (result: GenerateScheduleResponse) => void;
@@ -20,6 +21,7 @@ export function ConfigurationPage({
   return (
     <div>
       <h2>Configurar el horario</h2>
+      <MathBadge notation="C(n, r)" label="Combinaciones posibles" />
 
       {loading && <p>Cargando materias disponibles...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}

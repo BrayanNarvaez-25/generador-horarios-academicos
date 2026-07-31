@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useCourses } from "../hooks/useCourses";
 import { CourseForm } from "../components/CourseForm";
 import { CourseList } from "../components/CourseList";
+import { MathBadge } from "../components/MathBadge";
 import {
   createCourse,
   updateCourse,
@@ -38,6 +39,7 @@ export function CoursesPage() {
   return (
     <div>
       <h2>Administración de materias</h2>
+      <MathBadge notation="U = { materias }" label="Conjunto universal" />
 
       <CourseForm
         key={editingCourse?.id ?? "new"}

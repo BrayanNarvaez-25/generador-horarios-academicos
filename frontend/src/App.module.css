@@ -1,15 +1,50 @@
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+.header {
+  margin-bottom: 0.25rem;
+}
+
+.subtitle {
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin: 0.25rem 0 1.5rem;
+  letter-spacing: 0.02em;
+}
+
 .nav {
   display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
+  gap: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2rem;
 }
 
-.nav button {
-  padding: 0.5rem 1rem;
-  cursor: pointer;
+.navButton {
+  background: none;
+  color: var(--text-muted);
+  border: none;
+  border-radius: 0;
+  padding: 0.6rem 0.1rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
 }
 
-.nav button:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
+.navButton:hover:not(:disabled) {
+  background: none;
+  color: var(--primary);
+}
+
+.navButtonActive {
+  color: var(--primary);
+  border-bottom: 2px solid var(--primary);
+}
+
+.navButton:disabled {
+  background: none;
+  color: #c9cad2;
 }

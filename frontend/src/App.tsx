@@ -28,16 +28,36 @@ function App() {
     setCurrentPage("detail");
   }
 
+  function navClass(page: PageName) {
+    return `${styles.navButton} ${
+      currentPage === page ? styles.navButtonActive : ""
+    }`;
+  }
+
   return (
-    <div>
-      <h1>Generador Inteligente de Horarios Académicos</h1>
+    <div className={styles.container}>
+      <header className={styles.header}>
+        <h1>Generador Inteligente de Horarios Académicos</h1>
+        <p className={styles.subtitle}>
+          Teoría de conjuntos · Álgebra proposicional · Combinatoria
+        </p>
+      </header>
 
       <nav className={styles.nav}>
-        <button onClick={() => setCurrentPage("courses")}>Materias</button>
-        <button onClick={() => setCurrentPage("configuration")}>
+        <button
+          className={navClass("courses")}
+          onClick={() => setCurrentPage("courses")}
+        >
+          Materias
+        </button>
+        <button
+          className={navClass("configuration")}
+          onClick={() => setCurrentPage("configuration")}
+        >
           Configuración
         </button>
         <button
+          className={navClass("results")}
           onClick={() => setCurrentPage("results")}
           disabled={!scheduleResult}
         >

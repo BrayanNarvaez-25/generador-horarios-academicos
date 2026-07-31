@@ -1,38 +1,56 @@
 .backButton {
   margin-bottom: 1rem;
-  cursor: pointer;
+  background: none;
+  color: var(--primary);
+  padding: 0.3rem 0;
+}
+
+.backButton:hover {
+  background: none;
+  text-decoration: underline;
 }
 
 .validSummary,
 .discardedSummary {
-  border-radius: 8px;
+  border-radius: var(--radius);
   padding: 1rem;
   margin-bottom: 1rem;
 }
 
 .validSummary {
-  background: rgba(39, 174, 96, 0.15);
-  border-left: 4px solid #27ae60;
+  background: var(--valid-bg);
+  border-left: 4px solid var(--valid);
+  color: var(--valid);
 }
 
 .discardedSummary {
-  background: rgba(192, 57, 43, 0.15);
-  border-left: 4px solid #c0392b;
+  background: var(--discarded-bg);
+  border-left: 4px solid var(--discarded);
+  color: var(--discarded);
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  border-radius: var(--radius);
+  overflow: hidden;
 }
 
 .table th,
 .table td {
-  border: 1px solid #444;
-  padding: 0.5rem;
+  border-bottom: 1px solid var(--border);
+  padding: 0.6rem 0.75rem;
   text-align: left;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
+  color: var(--text);
 }
 
 .table th {
-  background-color: #2a2a2a;
+  background-color: var(--primary);
+  color: white;
+  font-weight: 500;
+  font-size: 0.8rem;
+  text-transform: uppercase;
 }

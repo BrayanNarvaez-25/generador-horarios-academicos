@@ -5,6 +5,7 @@ import type {
 } from "../types/schedule";
 import { ScheduleCard } from "../components/ScheduleCard";
 import styles from "./ResultsPage.module.css";
+import { MathBadge } from "../components/MathBadge";
 
 interface ResultsPageProps {
   result: GenerateScheduleResponse;
@@ -26,6 +27,7 @@ export function ResultsPage({ result, onViewDetail }: ResultsPageProps) {
   return (
     <div>
       <h2>Resultados</h2>
+      <MathBadge notation="T ∧ O ∧ C ∧ D ∧ R" label="Regla de validación" />
 
       <div className={styles.summary}>
         <p>Materias disponibles: {result.totalCourses}</p>

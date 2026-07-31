@@ -1,0 +1,77 @@
+:root {
+  --bg: #f7f6f2;
+  --surface: #ffffff;
+  --border: #ddddcf;
+  --text: #1e2233;
+  --text-muted: #666b7a;
+
+  --primary: #1d3557;
+  --primary-hover: #14263f;
+  --gold: #b08d2b;
+
+  --valid: #2e7d46;
+  --valid-bg: #eaf4ec;
+  --discarded: #b3261e;
+  --discarded-bg: #fbeae9;
+
+  --font-display: "Source Serif 4", serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+
+  --radius: 6px;
+  --shadow: 0 1px 3px rgba(30, 34, 51, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  color: var(--primary);
+  margin: 0;
+}
+
+button {
+  font-family: var(--font-body);
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+button:hover:not(:disabled) {
+  background: var(--primary-hover);
+}
+
+button:disabled {
+  background: var(--border);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+input, select {
+  font-family: var(--font-body);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.45rem 0.6rem;
+  font-size: 0.9rem;
+  background: var(--surface);
+  color: var(--text);
+}
+
+input:focus, select:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}

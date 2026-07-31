@@ -1,0 +1,23 @@
+.badge {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold);
+  background: var(--surface);
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius);
+  margin-bottom: 1rem;
+}
+
+.notation {
+  font-family: var(--font-mono);
+  color: var(--gold);
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
