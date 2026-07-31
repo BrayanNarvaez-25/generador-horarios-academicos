@@ -1,0 +1,38 @@
+.backButton {
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+.validSummary,
+.discardedSummary {
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.validSummary {
+  background: rgba(39, 174, 96, 0.15);
+  border-left: 4px solid #27ae60;
+}
+
+.discardedSummary {
+  background: rgba(192, 57, 43, 0.15);
+  border-left: 4px solid #c0392b;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  border: 1px solid #444;
+  padding: 0.5rem;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.table th {
+  background-color: #2a2a2a;
+}

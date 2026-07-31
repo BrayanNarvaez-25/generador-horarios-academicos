@@ -2,6 +2,7 @@ import { useState } from "react";
 import { CoursesPage } from "./pages/CoursesPage";
 import { ConfigurationPage } from "./pages/ConfigurationPage";
 import { ResultsPage } from "./pages/ResultsPage";
+import { ScheduleDetailPage } from "./pages/ScheduleDetailPage";
 import type {
   GenerateScheduleResponse,
   EvaluatedSchedule,
@@ -55,10 +56,10 @@ function App() {
       )}
 
       {currentPage === "detail" && selectedSchedule && (
-        <p>
-          Aquí irá la Pantalla 4 de detalle (siguiente paso). Materias:{" "}
-          {selectedSchedule.courses.join(", ")}
-        </p>
+        <ScheduleDetailPage
+          schedule={selectedSchedule}
+          onBack={() => setCurrentPage("results")}
+        />
       )}
     </div>
   );
