@@ -110,7 +110,8 @@ export async function handleDeleteCourse(req: Request, res: Response) {
     return res.status(204).send();
   } catch (error) {
     return res.status(500).json({
-      message: "Error al eliminar la materia.",
+      message:
+        "Error al eliminar la materia. Verifica que no tenga relaciones que lo impidan.",
       error: error instanceof Error ? error.message : "Error desconocido",
     });
   }

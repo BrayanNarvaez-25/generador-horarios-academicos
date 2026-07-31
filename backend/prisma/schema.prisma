@@ -35,8 +35,8 @@ model Prerequisite {
   courseId             Int @map("course_id")
   prerequisiteCourseId Int @map("prerequisite_course_id")
 
-  course             Course @relation("MainCourse", fields: [courseId], references: [id])
-  prerequisiteCourse Course @relation("PrerequisiteCourse", fields: [prerequisiteCourseId], references: [id])
+  course             Course @relation("MainCourse", fields: [courseId], references: [id], onDelete: Cascade)
+  prerequisiteCourse Course @relation("PrerequisiteCourse", fields: [prerequisiteCourseId], references: [id], onDelete: Cascade)
 
   @@id([courseId, prerequisiteCourseId])
   @@map("prerequisites")
