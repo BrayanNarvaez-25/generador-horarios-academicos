@@ -1,0 +1,52 @@
+.validCard,
+.discardedCard {
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  border: 1px solid #ccc;
+}
+
+.validCard {
+  border-left: 4px solid #27ae60;
+}
+
+.discardedCard {
+  border-left: 4px solid #c0392b;
+  opacity: 0.85;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.validBadge {
+  background: #27ae60;
+  color: white;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.discardedBadge {
+  background: #c0392b;
+  color: white;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.courseList {
+  margin: 0.5rem 0;
+  padding-left: 1.2rem;
+}
+
+.reasons {
+  font-size: 0.8rem;
+  color: #c0392b;
+  padding-left: 1.2rem;
+  margin-bottom: 0.5rem;
+}
