@@ -1,0 +1,15 @@
+.nav {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.nav button {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.nav button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
