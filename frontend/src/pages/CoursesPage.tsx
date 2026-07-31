@@ -32,8 +32,16 @@ export function CoursesPage() {
     );
     if (!confirmed) return;
 
-    await deleteCourse(id);
-    await reloadCourses();
+    try {
+      await deleteCourse(id);
+      await reloadCourses();
+    } catch (err) {
+      alert(
+        err instanceof Error
+          ? err.message
+          : "Ocurrió un error al eliminar la materia."
+      );
+    }
   }
 
   return (
