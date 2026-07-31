@@ -1,18 +1,6 @@
 import { Router } from "express";
-import {
-  handleGenerateSchedule,
-  handleSetConceptsDemo,
-  handleConflictsDemo,
-  handleModalityDemo,
-  handleDifficultyAndCreditsDemo,
-  handlePrerequisitesDemo,
-} from "../controllers/scheduleController.js";
+import { handleGenerateSchedule } from "../controllers/scheduleController.js";
 
 export const scheduleRoutes = Router();
 
 scheduleRoutes.post("/generate", handleGenerateSchedule);
-scheduleRoutes.get("/set-concepts-demo", handleSetConceptsDemo);
-scheduleRoutes.get("/conflicts-demo", handleConflictsDemo);
-scheduleRoutes.get("/modality-demo", handleModalityDemo);
-scheduleRoutes.get("/difficulty-credits-demo", handleDifficultyAndCreditsDemo);
-scheduleRoutes.get("/prerequisites-demo", handlePrerequisitesDemo);
