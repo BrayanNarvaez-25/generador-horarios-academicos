@@ -9,8 +9,16 @@ import {
 
 export async function handleCreateCourse(req: Request, res: Response) {
   try {
-    const { name, day, startTime, endTime, modality, difficulty, credits } =
-      req.body;
+    const {
+      name,
+      day,
+      startTime,
+      endTime,
+      modality,
+      difficulty,
+      credits,
+      prerequisiteIds,
+    } = req.body;
 
     if (
       !name ||
@@ -34,6 +42,7 @@ export async function handleCreateCourse(req: Request, res: Response) {
       modality,
       difficulty,
       credits,
+      prerequisiteIds,
     });
 
     return res.status(201).json(course);

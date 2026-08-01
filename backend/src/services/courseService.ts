@@ -9,10 +9,28 @@ interface CourseInput {
   modality: string;
   difficulty: string;
   credits: number;
+  prerequisiteIds?: number[];
 }
 
-export async function createCourse(data: CourseInput) {
-  return prisma.course.create({ data });
+export async function createCourse(
+  data: CourseInput
+): Promise<CourseWithPrerequisites> {
+  const { prerequisiteIds, ...courseData } = data;
+
+  const course = await prisma.course.create({
+    data: courseData,
+  });
+
+  if (prerequisiteIds && prerequisiteIds.length > 0) {
+    await prisma.prerequisite.createMany({
+      data: prerequisiteIds.map((prerequisiteCourseId) => ({
+        courseId: course.id,
+        prerequisiteCourseId,
+      })),
+    });
+  }
+
+  return getCourseById(course.id) as Promise<CourseWithPrerequisites>;
 }
 
 export async function getAllCourses(): Promise<CourseWithPrerequisites[]> {
@@ -25,7 +43,9 @@ export async function getAllCourses(): Promise<CourseWithPrerequisites[]> {
   });
 }
 
-export async function getCourseById(id: number) {
+export async function getCourseById(
+  id: number
+): Promise<CourseWithPrerequisites | null> {
   return prisma.course.findUnique({
     where: { id },
     include: {
@@ -36,11 +56,31 @@ export async function getCourseById(id: number) {
   });
 }
 
-export async function updateCourse(id: number, data: Partial<CourseInput>) {
-  return prisma.course.update({
+export async function updateCourse(
+  id: number,
+  data: Partial<CourseInput>
+): Promise<CourseWithPrerequisites> {
+  const { prerequisiteIds, ...courseData } = data;
+
+  await prisma.course.update({
     where: { id },
-    data,
+    data: courseData,
   });
+
+  if (prerequisiteIds !== undefined) {
+    await prisma.prerequisite.deleteMany({ where: { courseId: id } });
+
+    if (prerequisiteIds.length > 0) {
+      await prisma.prerequisite.createMany({
+        data: prerequisiteIds.map((prerequisiteCourseId) => ({
+          courseId: id,
+          prerequisiteCourseId,
+        })),
+      });
+    }
+  }
+
+  return getCourseById(id) as Promise<CourseWithPrerequisites>;
 }
 
 export async function deleteCourse(id: number) {
