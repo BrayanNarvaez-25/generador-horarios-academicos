@@ -27,4 +27,5 @@ export interface CourseInput {
   modality: string;
   difficulty: string;
   credits: number;
+  prerequisiteIds: number[];
 }

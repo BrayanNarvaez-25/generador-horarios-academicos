@@ -4,6 +4,7 @@ import styles from "./CourseForm.module.css";
 
 interface CourseFormProps {
   initialData?: Course;
+  availableCourses: Course[];
   onSubmit: (data: CourseInput) => Promise<void>;
   onCancel?: () => void;
 }
@@ -16,9 +17,15 @@ const emptyForm: CourseInput = {
   modality: "Presencial",
   difficulty: "Media",
   credits: 3,
+  prerequisiteIds: [],
 };
 
-export function CourseForm({ initialData, onSubmit, onCancel }: CourseFormProps) {
+export function CourseForm({
+  initialData,
+  availableCourses,
+  onSubmit,
+  onCancel,
+}: CourseFormProps) {
   const [formData, setFormData] = useState<CourseInput>(emptyForm);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -33,9 +40,24 @@ export function CourseForm({ initialData, onSubmit, onCancel }: CourseFormProps)
         modality: initialData.modality,
         difficulty: initialData.difficulty,
         credits: initialData.credits,
+        prerequisiteIds: initialData.requiredPrerequisites.map(
+          (p) => p.prerequisiteCourseId
+        ),
       });
     }
   }, [initialData]);
+
+  function togglePrerequisite(courseId: number) {
+    setFormData((prev) => {
+      const alreadyIncluded = prev.prerequisiteIds.includes(courseId);
+      return {
+        ...prev,
+        prerequisiteIds: alreadyIncluded
+          ? prev.prerequisiteIds.filter((id) => id !== courseId)
+          : [...prev.prerequisiteIds, courseId],
+      };
+    });
+  }
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -53,6 +75,11 @@ export function CourseForm({ initialData, onSubmit, onCancel }: CourseFormProps)
       setSubmitting(false);
     }
   }
+
+  // Una materia no puede ser prerrequisito de sí misma.
+  const selectableCourses = availableCourses.filter(
+    (course) => course.id !== initialData?.id
+  );
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
@@ -151,6 +178,23 @@ export function CourseForm({ initialData, onSubmit, onCancel }: CourseFormProps)
           required
         />
       </label>
+
+      <fieldset className={styles.fieldset}>
+        <legend>Prerrequisitos</legend>
+        {selectableCourses.length === 0 && (
+          <p>No hay otras materias registradas todavía.</p>
+        )}
+        {selectableCourses.map((course) => (
+          <label key={course.id} className={styles.checkboxLabel}>
+            <input
+              type="checkbox"
+              checked={formData.prerequisiteIds.includes(course.id)}
+              onChange={() => togglePrerequisite(course.id)}
+            />
+            {course.name}
+          </label>
+        ))}
+      </fieldset>
 
       <div className={styles.actions}>
         <button type="submit" disabled={submitting}>

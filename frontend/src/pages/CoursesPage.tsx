@@ -52,6 +52,7 @@ export function CoursesPage() {
       <CourseForm
         key={editingCourse?.id ?? "new"}
         initialData={editingCourse ?? undefined}
+        availableCourses={courses}
         onSubmit={editingCourse ? handleUpdate : handleCreate}
         onCancel={editingCourse ? () => setEditingCourse(null) : undefined}
       />
